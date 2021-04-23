@@ -1,7 +1,6 @@
 package main
 
 import (
-	"GoMicroservices2/Activity/calc"
 	"fmt"
 )
 

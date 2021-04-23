@@ -1,2 +1,2 @@
-# GoMS2_Actions
+# GoMS2Actions
 Hello

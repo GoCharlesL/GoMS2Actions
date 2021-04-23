@@ -3,9 +3,12 @@ name: CICD for GO
 on:
   push:
     branches: [main]
+    
+  pull_request:
+    branches: [main]
 
 jobs:
-  build:
+  build: 
     runs-on: ubuntu-16.04
     steps:
       - name: Checkout my codes
@@ -14,11 +17,11 @@ jobs:
         uses: actions/setup-go@v2
         with:
             go-version: '1.15'
-      - name: Version Check Go
+      - name: Check Go Version
         run: |
-          go version      
-      # go packages
-      - name: Install Dependencies
+          go version
+        
+      - name: Install dependencies
         run: |
           go get github.com/tebeka/go2xunit
       - if: ${{success()}}
@@ -28,21 +31,21 @@ jobs:
       - if: ${{success()}}
         name: Test Goblin
         run: |
-          go test -v | go2xunit > report.xml
+          go test -v
+          go test -v | go2xunit >report.xml
       - if: ${{failure()}}
         name: Create Issues
         uses: nashmaniac/create-issue-action@v1.1
         with:
-          title: Build Failed
+          title: Build Failed!
           token: ${{secrets.GITHUB_TOKEN}}
           assignees: ${{github.actor}}
           labels: worflow-failed
           body: Workflow failed for commit ${{github.sha}}
-      - if: ${{success()}}
-        name: Display Test Information
-        # external package
+          
+      - name: Display test information
         uses: EnricoMi/publish-unit-test-result-action@v1.5
+        if: always()
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
           files: report.xml
-        

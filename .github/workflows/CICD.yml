@@ -34,5 +34,6 @@ jobs:
         # external package
         uses: EnricoMi/publish-unit-test-result-action@v1.5
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
           files: report.xml
         

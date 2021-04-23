@@ -16,9 +16,23 @@ jobs:
             go-version: '1.15'
       - name: Version Check Go
         run: |
-          go version
+          go version      
+      # go packages
       - name: Install Dependencies
         run: |
           go get github.com/tebeka/go2xunit
+      - if: ${{success}}
+        name: Install Goblin
+        run: |
           go get github.com/franela/goblin
-          go test -v
+      - if: ${{success}}
+        name: Test Goblin
+        run: |
+          go test -v | go2xunit > report.xml
+      - if: ${{success}}
+        name: Display Test Information
+        # external package
+        uses: EnricoMi/publish-unit-test-result-action@v1.5
+        with:
+          files: report.xml
+        
